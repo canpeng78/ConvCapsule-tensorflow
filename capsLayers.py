@@ -117,19 +117,18 @@ class CapsuleConv2d(object):
             db = tf.random_uniform([inshape[0], inshape[1], 1, inshape[3]], minval=-0.5, maxval=0.5)
             b = tf.tile(db, [1, 1, self.capsize, 1])
         for it in xrange(self.rt_iternum):
-            with tf.variable_scope(self.name+"_DR_" + str(it)):
-                self.c = tf.nn.softmax(b)
-                if it == self.rt_iternum - 1:
-                    s = tf.multiply(incaps, self.c)
-                    s = tf.reduce_sum(s, axis=1)  # s is in shape of [batch_size, self.capsize, self.out_channels]
-                    v = self.squash(s)
-                else:
-                    s = tf.multiply(incaps_grdstop, self.c)
-                    s = tf.reduce_sum(s, axis=1)
-                    v = self.squash(s)  # v in shape [batch_size, self.capsize, self.out_channels]
-                    v_tiled = tf.tile(tf.expand_dims(v, 1), [1, inshape[1], 1, 1])
-                    db = tf.reduce_sum(tf.multiply(incaps_grdstop, v_tiled), 2, keep_dims=True)
-                    b += tf.tile(db, [1, 1, self.capsize, 1])
+            self.c = tf.nn.softmax(b)
+            if it == self.rt_iternum - 1:
+                s = tf.multiply(incaps, self.c)
+                s = tf.reduce_sum(s, axis=1)  # s is in shape of [batch_size, self.capsize, self.out_channels]
+                v = self.squash(s)
+            else:
+                s = tf.multiply(incaps_grdstop, self.c)
+                s = tf.reduce_sum(s, axis=1)
+                v = self.squash(s)  # v in shape [batch_size, self.capsize, self.out_channels]
+                v_tiled = tf.tile(tf.expand_dims(v, 1), [1, inshape[1], 1, 1])
+                db = tf.reduce_sum(tf.multiply(incaps_grdstop, v_tiled), 2, keep_dims=True)
+                b += tf.tile(db, [1, 1, self.capsize, 1])
         return v
 
     @staticmethod

@@ -42,8 +42,8 @@ def patches2d(input_size, kernel_size, strides, padding="VALID"):
         gridsz.insert(0, col)
         return patches, gridsz
     elif padding == "SAME":
-        ns_h = ceil((height - kh) / sh)
-        ns_w = ceil((width - kw) / sw)
+        ns_h = ceil(height / sh)
+        ns_w = ceil(width / sw)
         padded_h = ns_h * sh + kh
         padded_w = ns_w * sw + kw
         strtpd_h = (padded_h - height) // 2

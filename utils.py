@@ -56,8 +56,8 @@ def patches2d(input_size, kernel_size, strides, padding="VALID"):
             row = 0
             j = 0
             while j+kw < padded_w:
-                patches.append([max(i-strtpd_h, 0), max(j-strtpd_w, 0),
-                                min(i-strtpd_h+kh, height), min(j-strtpd_w+kw, width)])
+                patches.append([int(max(i-strtpd_h, 0)), int(max(j-strtpd_w, 0)),
+                                int(min(i-strtpd_h+kh, height)), int(min(j-strtpd_w+kw, width))])
                 j += sw
                 row += 1
             if i == 0:
